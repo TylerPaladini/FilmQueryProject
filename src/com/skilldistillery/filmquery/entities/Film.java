@@ -7,10 +7,10 @@ public class Film {
 	private int id;
 	private String title;
 	private String description;
-	private String release_year;
+	private int release_year;
 	private int language_id;
 	private String rental_duration;
-	private String rental_rate;
+	private double rental_rate;
 	private String length;
 	private double replacement_cost;
 	private String rating;
@@ -19,9 +19,12 @@ public class Film {
 	public int getId() {
 		return id;
 	}
+	public Film() {
+		
+	}
 
-	public Film(int id, String title, String description, String release_year, int language_id, String rental_duration,
-			String rental_rate, String length, double replacement_cost, String rating, String special_features) {
+	public Film(int id, String title, String description, int release_year, int language_id, String rental_duration,
+			double rental_rate, String length, double replacement_cost, String rating, String special_features) {
 		super();
 		this.id = id;
 		this.title = title;
@@ -56,12 +59,12 @@ public class Film {
 		this.description = description;
 	}
 
-	public String getRelease_year() {
+	public int getRelease_year() {
 		return release_year;
 	}
 
-	public void setRelease_year(String release_year) {
-		this.release_year = release_year;
+	public void setRelease_year(int i) {
+		this.release_year = i;
 	}
 
 	public int getLanguage_id() {
@@ -80,12 +83,12 @@ public class Film {
 		this.rental_duration = rental_duration;
 	}
 
-	public String getRental_rate() {
+	public double getRental_rate() {
 		return rental_rate;
 	}
 
-	public void setRental_rate(String rental_rate) {
-		this.rental_rate = rental_rate;
+	public void setRental_rate(double d) {
+		this.rental_rate = d;
 	}
 
 	public String getLength() {
@@ -120,6 +123,11 @@ public class Film {
 		this.special_features = special_features;
 	}
 
+	
+
+
+	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -129,17 +137,17 @@ public class Film {
 		result = prime * result + language_id;
 		result = prime * result + ((length == null) ? 0 : length.hashCode());
 		result = prime * result + ((rating == null) ? 0 : rating.hashCode());
-		result = prime * result + ((release_year == null) ? 0 : release_year.hashCode());
+		result = prime * result + release_year;
 		result = prime * result + ((rental_duration == null) ? 0 : rental_duration.hashCode());
-		result = prime * result + ((rental_rate == null) ? 0 : rental_rate.hashCode());
 		long temp;
+		temp = Double.doubleToLongBits(rental_rate);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
 		temp = Double.doubleToLongBits(replacement_cost);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
 		result = prime * result + ((special_features == null) ? 0 : special_features.hashCode());
 		result = prime * result + ((title == null) ? 0 : title.hashCode());
 		return result;
 	}
-
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -168,20 +176,14 @@ public class Film {
 				return false;
 		} else if (!rating.equals(other.rating))
 			return false;
-		if (release_year == null) {
-			if (other.release_year != null)
-				return false;
-		} else if (!release_year.equals(other.release_year))
+		if (release_year != other.release_year)
 			return false;
 		if (rental_duration == null) {
 			if (other.rental_duration != null)
 				return false;
 		} else if (!rental_duration.equals(other.rental_duration))
 			return false;
-		if (rental_rate == null) {
-			if (other.rental_rate != null)
-				return false;
-		} else if (!rental_rate.equals(other.rental_rate))
+		if (Double.doubleToLongBits(rental_rate) != Double.doubleToLongBits(other.rental_rate))
 			return false;
 		if (Double.doubleToLongBits(replacement_cost) != Double.doubleToLongBits(other.replacement_cost))
 			return false;
@@ -197,7 +199,6 @@ public class Film {
 			return false;
 		return true;
 	}
-
 	@Override
 	public String toString() {
 		return "Film [id=" + id + ", title=" + title + ", description=" + description + ", release_year=" + release_year

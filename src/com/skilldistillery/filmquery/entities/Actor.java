@@ -5,6 +5,10 @@ public class Actor {
 	private String first_name;
 	private String last_name;
 	
+	public Actor() {
+		
+	}
+	
 	public Actor(int id, String first_name, String last_name) {
 		super();
 		this.id = id;
