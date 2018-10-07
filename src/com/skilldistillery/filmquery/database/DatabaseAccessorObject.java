@@ -78,14 +78,19 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 	public List<Actor> getActorsByFilmId(int filmId) {
 		List<Actor> actors = new ArrayList<>();
 		
-		try {
-			Connection conn = DriverManager.getConnection(URL, user, pass);
+
+			try {
+				Connection conn = DriverManager.getConnection(URL, user, pass);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			String sql = "Select actor.id, actor.first_name, actor.last_name " + 
 					"From actor Join film_actor " + 
 					"on actor.id = film_actor.actor_id" + 
 					"Join film on film_actor.film_id = film.id"
 					+ "Where id = ?";
-		}
+		
 		
 
 		
