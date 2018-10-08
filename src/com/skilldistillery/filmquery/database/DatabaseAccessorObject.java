@@ -18,7 +18,8 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 		Connection conn = DriverManager.getConnection(URL, user, pass);
 
 		Film film = null;
-		// ...
+//		Actor actor = null;
+		
 		String sql = "select id, title, description, release_year, language_id, "
 				+ "rental_duration, rental_rate, length, replacement_cost, rating, "
 				+ "special_features from film WHERE id = ?";
@@ -27,19 +28,23 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 
 		ResultSet filmResult = stmt.executeQuery();
 		if (filmResult.next()) {
-			film = new Film(); // Create the object
-			// Here is our mapping of query columns to our object fields:
+			film = new Film();
+//			actor = new Actor();
+			
 			film.setId(filmResult.getInt("id"));
 			film.setTitle(filmResult.getString("title"));
 			film.setDescription(filmResult.getString("description"));
 			film.setRelease_year(filmResult.getInt("release_year"));
-			film.setLanguage_id(filmResult.getInt("language_id"));
-			film.setRental_duration(filmResult.getString("rental_duration"));
-			film.setRental_rate(filmResult.getDouble("rental_rate"));
-			film.setLength(filmResult.getString("length"));
-			film.setReplacement_cost(filmResult.getDouble("replacement_cost"));
+			film.setLanguage_id(filmResult.getString("language_id"));
+			film.setRentalDuration(filmResult.getInt("rental_duration"));
+			film.setRentalRate(filmResult.getDouble("rental_rate"));
+			film.setLength(filmResult.getInt("length"));
+			film.setReplacementCost(filmResult.getDouble("replacement_cost"));
 			film.setRating(filmResult.getString("rating"));
-			film.setSpecial_features(filmResult.getString("special_features"));
+			film.setSpecialFeature(filmResult.getString("special_features"));
+				
+				
+            
 
 		}
 		filmResult.close();
@@ -74,24 +79,54 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 
 	}
 
+public List<Film> getFilmByKeyword(String keyword) throws SQLException {
+	
+	List<Film> films = new ArrayList<>();
+	Film film = null;
+	Actor actor = null;
+	
+	String sql = "select film.id, title, description, release_year, language.name, rental_duration, rental_rate, length, replacement_cost,"
+    + " rating, special_features, actor.id, actor.first_name, actor.last_name "
+    + "  from film join language on film.language_id = language.id "
+    + "join film_actor on film.id = film_actor.film_id "  
+    + "  join actor on actor.id = film_actor.actor_id "
+    + "where title like ? or description like ?";
+	
+	Connection conn = DriverManager.getConnection(URL, user, pass);
+	PreparedStatement stmt = conn.prepareStatement(sql);
+	stmt.setString(1, keyword + "%");
+	stmt.setString(2, "%"  + keyword + "%");
+	ResultSet rs = stmt.executeQuery();
+	while(rs.next()) {
+		film = new Film();
+		actor = new Actor();
+		
+		film.setId(rs.getInt("id"));
+        film.setTitle(rs.getString("title"));
+        film.setDescription(rs.getString("description"));
+        film.setRelease_year(rs.getInt("release_year"));
+        film.setLanguage_id(rs.getString("language.name"));
+        film.setRentalDuration(rs.getInt("rental_duration"));
+        film.setRentalRate(rs.getDouble("rental_rate"));
+        film.setLength(rs.getInt("length"));
+        film.setRating(rs.getString("rating"));
+        film.setSpecialFeature(rs.getString("special_features"));
+        	actor.setId(rs.getInt("id"));
+        	actor.setFirst_name(rs.getString("first_name"));
+        	actor.setLast_name(rs.getString("last_name"));
+        film.setActor(actor);
+        
+        films.add(film);
+	}
+	rs.close();
+	stmt.close();
+	conn.close();
+	return films;
+}
+
+
 	@Override
 	public List<Actor> getActorsByFilmId(int filmId) {
-		List<Actor> actors = new ArrayList<>();
-		
-
-			try {
-				Connection conn = DriverManager.getConnection(URL, user, pass);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			String sql = "Select actor.id, actor.first_name, actor.last_name " + 
-					"From actor Join film_actor " + 
-					"on actor.id = film_actor.actor_id" + 
-					"Join film on film_actor.film_id = film.id"
-					+ "Where id = ?";
-		
-		
 
 		
 		return null;
